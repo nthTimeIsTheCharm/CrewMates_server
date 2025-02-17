@@ -5,7 +5,7 @@ const Task = require("../models/Task.model");
 const Group = require("../models/Group.model");
 
 
-async function getRecurringTasks(groupId){
+async function getTasksAndMembers(groupId){
     return Group.findById(groupId)
       .select('recurringTasks members -_id')
       .then(response => {
@@ -33,7 +33,7 @@ router.post("/week", async (req, res) => {
     const { groupId,   prevWeekNumber } = req.body;
 
     //Fetch recurring tasks and group members
-    let groupInfo = await getRecurringTasks(groupId);
+    let groupInfo = await getTasksAndMembers(groupId);
     const recurringTasks = groupInfo.recurringTasks;
     const groupMembers = groupInfo.members;
         
