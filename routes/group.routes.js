@@ -20,18 +20,43 @@ router.post("/", (req, res) => {
 });
 
 //Get group information
+
 router.get("/:id", (req, res) => {
   const { id } = req.params;
+  Group.findById(groupId)
+  .then((response) => res.json(response))
+    .catch((error) => {
+      console.error("Error while finding the group ->", error);
+      res.status(500).json({ error: "Failed to find the group" });
+    });
 });
+
 
 //Update group
 router.put("/:id", (req, res) => {
   const { id } = req.params;
+  Group.findByIdAndUpdate(groupId, req.body, {new: true})
+  .then((response) => res.json(response))
+    .catch((error) => {
+      console.error("Error while updating the group ->", error);
+      res.status(500).json({ error: "Failed to update the group" });
+    });
 });
+
+
+
 
 //Delete group
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-});
+  Group.findByIdAndDelete(groupId)
+  .then(() => res.json({ message: `Project with ${groupId} is removed successfully.`,}) )
+  .catch((error) => {
+    console.error("Error while deleting the group ->", error);
+    res.status(500).json({ error: "Failed to delete the group" });
+  });
+   });
+
+
 
 module.exports = router;
