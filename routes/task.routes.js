@@ -72,20 +72,20 @@ router.post("/week", async (req, res) => {
     //The value saved in the context would need to be updated too
 });
 
-//Get task information
-router.get("/:id", (req, res) => {
+//Get tasks for the week information
+router.get("/:weekId", (req, res) => {
     const {id} = req.params;
 });
 
-//Update task
+//Mark task as done/not done
 router.put("/:id", (req, res) => {
     const {id} = req.params;
 });
 
+/*
 //Delete task
-router.delete("/:id", (req, res) => {
-    const {id} = req.params;
-});
+Tasks cannot be deleted once created in a week
+*/
 
 
 module.exports = router;

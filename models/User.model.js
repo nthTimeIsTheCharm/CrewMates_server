@@ -18,10 +18,14 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-
-    group: { 
+    avatar: {
+      type: String,
+      //TODO decide what to do withy user avatars
+    },
+    group: {
       type: Schema.Types.ObjectId,
-      ref: "Group" },
+      ref: "Group",
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
