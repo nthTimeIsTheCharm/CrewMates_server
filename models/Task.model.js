@@ -7,6 +7,7 @@ const taskSchema = new Schema(
     assignee: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true
     },
     isDone: { type: Boolean, default: false },
     group: {

@@ -4,6 +4,24 @@ const router = express.Router();
 const Task = require("../models/Task.model");
 const Group = require("../models/Group.model");
 
+function assignTasks(members, taskCount){
+    const result = [];
+    const assignees = [];
+    console.log(members);
+
+    for (let i = 1; i<= taskCount; i++){
+        if (assignees.length === 0){
+            assignees.push(members);
+        }
+        const randomIndex = Math.ceil(Math.random()*assignees.length);
+        result.push(members[randomIndex]);
+        assignees.splice(randomIndex, 1);
+    }
+    console.log(members);
+    console.log(result);
+    return result;
+}
+
 async function getTasksAndMembers(groupId) {
   return Group.findById(groupId)
     .select("recurringTasks members -_id")
@@ -36,18 +54,20 @@ router.post("/week", async (req, res) => {
   const recurringTasks = groupInfo.recurringTasks;
   const groupMembers = groupInfo.members;
 
+  //Ramdomly assign tasks by producing an array
+
+  const assignments = assignTasks(groupMembers, recurringTasks.length);
+
   //Create the tasks
   if (recurringTasks.length === 0) {
     console.error("No recurring tasks found");
     res.status(404).json({ error: "No recurrent tasks found" });
     //TODO - Should the frontend check if the group has any recurring tasks to decide whether to even provided the option to create a week?
   } else {
-    const newTasks = recurringTasks.map((taskName) => {
+    const newTasks = recurringTasks.map((taskName, index) => {
       return {
         name: taskName,
-        assignee: "67b08d45c85d4d61a35489bf",
-        //TODO create function to randomly assign
-        //Decide how to get group members. Saved in context?
+        assignee: assignments[index],
         group: groupId,
         weekNumber: prevWeekNumber + 1,
       };
