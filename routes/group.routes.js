@@ -23,7 +23,7 @@ router.post("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
-  Group.findById(groupId)
+  Group.findById(id)
   .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while finding the group ->", error);
@@ -35,7 +35,14 @@ router.get("/:id", (req, res) => {
 //Update group
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  Group.findByIdAndUpdate(groupId, req.body, {new: true})
+  const { name, members, recurringTasks } = req.body;
+  console.log(req.params)
+  Group.findByIdAndUpdate(id,{ 
+    name, 
+    members,
+    recurringTasks
+    }, {new: true})
+
   .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while updating the group ->", error);
@@ -49,8 +56,8 @@ router.put("/:id", (req, res) => {
 //Delete group
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  Group.findByIdAndDelete(groupId)
-  .then(() => res.json({ message: `Project with ${groupId} is removed successfully.`,}) )
+  Group.findByIdAndDelete(id)
+  .then(() => res.json({ message: `Project with ${id} is removed successfully.`,}) )
   .catch((error) => {
     console.error("Error while deleting the group ->", error);
     res.status(500).json({ error: "Failed to delete the group" });
