@@ -4,7 +4,7 @@
 
 | HTTP verb | URL              | Request body | Action                                        |
 | --------- | ---------------- | ------------ | --------------------------------------------- |
-| POST      | /api/auth/signup | JSON         | Creates a new user in the database            |
+| POST      | /api/auth/signup | JSON         | Create a new user in the database            |
 | POST      | /api/auth/login  | JSON         | Verifies email and password and returns a JWT |
 | GET       | /api/auth/verify | (empty)      | Used to verify JWT stored on the client       |
 
@@ -12,8 +12,6 @@
 
 | HTTP verb | URL            | Request body | Action                    |
 | --------- | -------------- | ------------ | ------------------------- |
-| POST      | /api/users     | JSON         | Creates a new user        |
-| GET       | /api/users     | (empty)      | Get all users information |
 | GET       | /api/users/:id | (empty)      | Get user information      |
 | PUT       | /api/users/:id | JSON         | Update user               |
 | DELETE    | /api/users/:id | (empty)      | Delete user               |
@@ -22,8 +20,8 @@
 
 | HTTP verb | URL            | Request body | Action                    |
 | --------- | -------------- | ------------ | ------------------------- |
-| POST      | /api/tasks     | JSON         | Creates a new task        |
-| GET       | /api/tasks     | (empty)      | Get all tasks information |
+| POST      | /api/tasks/single-task     | JSON         | Create a new task in the current week        |
+| --POST      | /api/tasks/whole-week     | JSON         | Create all the tasks for the next week         |
 | GET       | /api/tasks/:id | (empty)      | Get task information      |
 | PUT       | /api/tasks/:id | JSON         | Update task               |
 | DELETE    | /api/tasks/:id | (empty)      | Delete task               |
@@ -32,8 +30,7 @@
 
 | HTTP verb | URL             | Request body | Action                     |
 | --------- | --------------- | ------------ | -------------------------- |
-| POST      | /api/groups     | JSON         | Creates a new group        |
-| GET       | /api/groups     | (empty)      | Get all groups information |
+| POST      | /api/groups     | JSON         | Create a new group        |
 | GET       | /api/groups/:id | (empty)      | Get group information      |
 | PUT       | /api/groups/:id | JSON         | Update group               |
 | DELETE    | /api/groups/:id | (empty)      | Delete group               |
