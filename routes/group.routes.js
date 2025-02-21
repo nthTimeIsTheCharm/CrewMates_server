@@ -26,8 +26,9 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const { id } = req.params;
   Group.findById(id)
-    .then((response) => res.json(response))
-    .catch((error) => {
+    .then((response) => {
+      res.json(response);
+    }).catch((error) => {
       console.error("Error while finding the group ->", error);
       res.status(500).json({ error: "Failed to find the group" });
     });
@@ -37,7 +38,6 @@ router.get("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
   const { id } = req.params;
   const { name, members, recurringTasks, weekNumber, weekEndDate } = req.body;
-  console.log(req.params);
   Group.findByIdAndUpdate(
     id,
     {
