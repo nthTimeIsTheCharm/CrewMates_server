@@ -7,10 +7,10 @@ const Task = require("../models/Task.model");
 ////// Functions for checks
 ///////////////////////////////////////
 
-async function getGroupInfo(groupId, req) {
+async function getGroupInfo(groupId, protocol, host) {
   try {
     const response = await fetch(
-      `${req.protocol}://${req.get("host")}/api/groups/${groupId}`
+      `${protocol}://${host}/api/groups/${groupId}`
     );
     const data = await response.json();
     return {
@@ -25,10 +25,10 @@ async function getGroupInfo(groupId, req) {
   }
 }
 
-async function getWeekEndDateAndNumber(groupId, req) {
+async function getWeekEndDateAndNumber(groupId, protocol, host) {
   try {
     const response = await fetch(
-      `${req.protocol}://${req.get("host")}/api/groups/${groupId}`
+      `${protocol}://${host}/api/groups/${groupId}`
     );
     const data = await response.json();
     return {
@@ -45,10 +45,11 @@ async function updateWeekEndDateAndNumber(
   groupId,
   newWeekNumber,
   endDate,
-  req
+  protocol,
+  host
 ) {
   try {
-    fetch(`${req.protocol}://${req.get("host")}/api/groups/${groupId}`, {
+    fetch(`${protocol}://${host}/api/groups/${groupId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -158,9 +159,12 @@ router.get("/:groupId/:currentDate", async (req, res) => {
   //Request weekNumber and weekEndDate to the group endpoint
   //Sending the req object along to dynamically create the URL to the endpoint and avoid hardcoding the URL
   //Using a relative path doesn't do the trick.
-  const weekInfo = await getWeekEndDateAndNumber(groupId, req);
-
-  if ((checkForActiveWeek(currentDate, weekInfo.weekEndDate)) === false){
+  const weekInfo = await getWeekEndDateAndNumber(
+    groupId,
+    req.protocol,
+    req.get("host")
+  );
+  if (checkForActiveWeek(currentDate, weekInfo.weekEndDate) === false) {
     res.json("null");
   } else {
     //If there's an active week, then find and send tasks for current weekNumber
@@ -172,7 +176,7 @@ router.get("/:groupId/:currentDate", async (req, res) => {
         console.error("Error while fetching this week's tasks ->", error);
         res.status(500).json({ error: "Failed to fetch tasks" });
       });
-  } 
+  }
 });
 
 //Creates tasks for the week, if there isn't an ongoing week
@@ -183,7 +187,7 @@ router.post("/:groupId/:currentDate", async (req, res) => {
   const { groupId, currentDate } = req.params;
 
   //Get information about the group from DB
-  let groupInfo = await getGroupInfo(groupId, req);
+  let groupInfo = await getGroupInfo(groupId, req.protocol, req.get("host"));
 
   //Double-check there isn't an active week already
   if (checkForActiveWeek(currentDate, groupInfo.weekEndDate) === true) {
@@ -225,7 +229,8 @@ router.post("/:groupId/:currentDate", async (req, res) => {
           groupId,
           newWeekNumber,
           calculateEndDate(currentDate),
-          req
+          req.protocol,
+          req.get("host")
         );
       })
       .catch((error) => {
