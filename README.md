@@ -8,6 +8,23 @@
 | POST      | /api/auth/login  | JSON         | Verifies email and password and returns a JWT |
 | GET       | /api/auth/verify | (empty)      | Used to verify JWT stored on the client       |
 
+## Group routes
+
+| HTTP verb | URL             | Request body | Action                     |
+| --------- | --------------- | ------------ | -------------------------- |
+| POST      | /api/groups     | JSON         | Create a new group         |
+| GET       | /api/groups/:id | (empty)      | Get group information      |
+| PUT       | /api/groups/:id | JSON         | Update group               |
+| DELETE    | /api/groups/:id | (empty)      | Delete group               |
+
+## Task routes
+
+| HTTP verb | URL                           | Request body               | Action                    |
+| --------- | ----------------------------- | -------------------------- | ------------------------- |
+| POST      | /api/tasks/one-off-task        | JSON                       | Create a new task in an existing week|
+| PUT       | /api/tasks/:id                | JSON                       | Update a task (done/not done)|
+| DELETE    | /api/tasks/:id                | (empty)                    | Delete task ???              | 
+
 ## User routes
 
 | HTTP verb | URL            | Request body | Action                    |
@@ -16,24 +33,12 @@
 | PUT       | /api/users/:id | JSON         | Update user               |
 | DELETE    | /api/users/:id | (empty)      | Delete user               |
 
-## Task routes
+## Week routes
 
-| HTTP verb | URL            | Request body | Action                    |
-| --------- | -------------- | ------------ | ------------------------- |
-| POST      | /api/tasks/single-task     | JSON         | Create a new task in the current week        |
-| --POST      | /api/tasks/whole-week     | JSON         | Create all the tasks for the next week         |
-| GET       | /api/tasks/:id | (empty)      | Get task information      |
-| PUT       | /api/tasks/:id | JSON         | Update task               |
-| DELETE    | /api/tasks/:id | (empty)      | Delete task               |
-
-## Group routes
-
-| HTTP verb | URL             | Request body | Action                     |
-| --------- | --------------- | ------------ | -------------------------- |
-| POST      | /api/groups     | JSON         | Create a new group        |
-| GET       | /api/groups/:id | (empty)      | Get group information      |
-| PUT       | /api/groups/:id | JSON         | Update group               |
-| DELETE    | /api/groups/:id | (empty)      | Delete group               |
+| HTTP verb | URL                               | Request body     | Action                     |
+| --------- | --------------------------------- | ---------------- | -------------------------- |
+| POST      | /api/week/:groupId/:currentDate   | JSON             | Create all the tasks for a new week|
+| GET       | /api/week/:groupId/:currentDate   | (empty)          | Get all the tasks for the current week (if any) |
 
 # Models
 
@@ -91,15 +96,19 @@
 ## Group Model
 
 ```
-{
-  name: { type: String, required: true },
-  members: {
-    type: [Schema.Types.ObjectId],
-    ref: "User" },
-  recurringTasks: { type:[String], default: ["Takeout the trash", "Wash dishes"]},
-  weekNumber: { type: Number, default: 0}
-},
-{
+const groupSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    members: {
+      type: [Schema.Types.ObjectId],
+      ref: "User",
+    },
+    recurringTasks: { type: [String] },
+    weekNumber: { type: Number, default: 0 },
+    weekEndDate: { type: Date, default: null },
+  },
+  { 
     timestamps: true,
-}
+  }
+);
 ```

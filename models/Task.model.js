@@ -13,6 +13,7 @@ const taskSchema = new Schema(
     group: {
       type: Schema.Types.ObjectId,
       ref: "Group",
+      required: true
     },
     weekNumber: { type: Number, required: true },
   },

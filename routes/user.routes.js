@@ -3,9 +3,6 @@ const router = express.Router();
 
 const User = require("../models/User.model");
 
-//Create a new user
-
-
 
 //Get user information
 
@@ -43,7 +40,7 @@ router.put("/:id", (req, res) => {
 });
 
 //Delete user
-
+//TODO: When a user gets deleted, we need to do something with the tasks in their name
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
   User.findByIdAndDelete(id)

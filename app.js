@@ -19,21 +19,21 @@ const indexRoutes = require("./routes/index.routes");
 app.use("/api", indexRoutes);
 
 const authRoutes = require("./routes/auth.routes");
-app.use("/auth", authRoutes);
-
-
-
+app.use("/api/auth", authRoutes);
 
 const groupRoutes = require("./routes/group.routes");
-app.use("/groups", groupRoutes);
+app.use("/api/groups", groupRoutes);
 
 
 const taskRoutes = require("./routes/task.routes");
-app.use("/tasks", taskRoutes);
+app.use("/api/tasks", taskRoutes);
 
 
 const userRoutes = require("./routes/user.routes");
-app.use("/users", userRoutes);
+app.use("/api/users", userRoutes);
+
+const weekRoutes = require("./routes/week.routes");
+app.use("/api/week", weekRoutes);
 
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
