@@ -9,9 +9,8 @@ const Task = require("../models/Task.model");
 
 async function getGroupInfo(groupId, protocol, host) {
   try {
-    const response = await fetch(
-      `${protocol}://${host}/api/groups/${groupId}`
-    );
+    //http://localhost:5005/api/...
+    const response = await fetch(`${protocol}://${host}/api/groups/${groupId}`);
     const data = await response.json();
     return {
       members: data.members,
@@ -139,7 +138,7 @@ function calculateEndDate(currentDate) {
     endDate.setDate(initialDate.getDate() + 1);
     console.log("endDate inside if", endDate);
   } else {
-    const daysTillMonday = 8 - dayOfWeek;
+    const daysTillMonday = 8 - dayOfWeek; //8 because Sunday is still within deadline
     endDate.setDate(initialDate.getDate() + daysTillMonday);
   }
   return endDate;
@@ -191,7 +190,8 @@ router.post("/:groupId/:currentDate", async (req, res) => {
 
   //Double-check there isn't an active week already
   if (checkForActiveWeek(currentDate, groupInfo.weekEndDate) === true) {
-    res.status(500).json({ error: "There is already a week in progress" }); //This error makes the server crash
+    res.status(500).json({ error: "There is already a week in progress" }); 
+    return;
   }
 
   //Extract necessary values to create the week
@@ -208,7 +208,8 @@ router.post("/:groupId/:currentDate", async (req, res) => {
   //Create the tasks
   if (recurringTasks.length === 0) {
     console.error("No recurring tasks found");
-    res.status(404).json({ error: "No recurring tasks found" }); //This error works fine
+    res.status(404).json({ error: "No recurring tasks found" }); 
+    return;
   } else {
     const newTasks = createTasks(
       recurringTasks,
