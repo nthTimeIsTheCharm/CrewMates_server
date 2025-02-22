@@ -20,14 +20,14 @@ router.get("/:id", (req, res) => {
 
 router.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { name, email, password } = req.body;
+  const { name, email, group } = req.body;
   console.log(req.params);
   User.findByIdAndUpdate(
     id,
     {
       name,
       email,
-      password,
+      group,
     },
     { new: true }
   )

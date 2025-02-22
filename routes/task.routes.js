@@ -7,7 +7,7 @@ const Task = require("../models/Task.model");
 //This would be a one off task created during the current week
 router.post("/one-off-task", (req, res) => {
   const { name, assignee, group, weekNumber } = req.body;
-  
+//TODO: get the current week from the database
   Task.create({ name, assignee, group, weekNumber })
     .then((newTask) => res.json(newTask))
     .catch((error) => {
