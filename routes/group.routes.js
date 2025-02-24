@@ -18,7 +18,8 @@ router.post("/", (req, res) => {
     .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while creating the group ->", error);
-      res.status(500).json({ error: "Failed to create the group" });
+      /* res.status(500).json({ error: "Failed to create the group" }); */
+      next(error);
     });
 });
 
@@ -30,7 +31,8 @@ router.get("/:id", (req, res) => {
       res.json(response);
     }).catch((error) => {
       console.error("Error while finding the group ->", error);
-      res.status(500).json({ error: "Failed to find the group" });
+      /* res.status(500).json({ error: "Failed to find the group" }); */
+      next(error);
     });
 });
 
@@ -53,7 +55,8 @@ router.put("/:id", (req, res) => {
     .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while updating the group ->", error);
-      res.status(500).json({ error: "Failed to update the group" });
+      /* res.status(500).json({ error: "Failed to update the group" }); */
+      next(error);
     });
 });
 
@@ -66,7 +69,8 @@ router.delete("/:id", (req, res) => {
     )
     .catch((error) => {
       console.error("Error while deleting the group ->", error);
-      res.status(500).json({ error: "Failed to delete the group" });
+      /* res.status(500).json({ error: "Failed to delete the group" }); */
+      next(error);
     });
 });
 

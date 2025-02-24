@@ -12,7 +12,8 @@ router.post("/one-off-task", (req, res) => {
     .then((newTask) => res.json(newTask))
     .catch((error) => {
       console.error("Error while finding the user ->", error);
-      res.status(500).json(error);
+  /*     res.status(500).json(error); */
+      next(error);
     });
 
 });
@@ -25,7 +26,8 @@ router.put("/:taskId", (req, res) => {
     .then((updatedTask) => res.json(updatedTask))
     .catch((error) => {
       console.error("Error while finding the user ->", error);
-      res.status(500).json(error);
+      /* res.status(500).json(error); */
+      next(error);
     });
 
 });
@@ -39,7 +41,8 @@ router.delete("/:taskId", (req, res) => {
     .then(() => res.json({ message: "Task successfully deleted." }))
     .catch((error) => {
       console.error(`Error while deleting task ${id} the user ->`, error);
-      res.status(500).json(error);
+      /* res.status(500).json(error); */
+      next(error);
     });
 
 });

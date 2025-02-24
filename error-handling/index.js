@@ -1,7 +1,7 @@
 module.exports = (app) => {
   app.use((req, res, next) => {
     // this middleware runs whenever requested page is not available
-    res.status(404).json({ message: "This route does not exist" });
+    res.status(404).json({ message: "Page not found!" });
   });
 
   app.use((err, req, res, next) => {

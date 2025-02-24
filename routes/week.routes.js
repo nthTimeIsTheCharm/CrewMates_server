@@ -19,8 +19,9 @@ async function getGroupInfo(groupId, protocol, host) {
       weekEndDate: data.weekEndDate,
     };
   } catch (error) {
-    console.error("Error while fetching groupInfo ->", error);
-    return { error: "Failed to fetch task group information." };
+    /* console.error("Error while fetching groupInfo ->", error);
+    return { error: "Failed to fetch task group information." }; */
+    next(error);
   }
 }
 
@@ -35,8 +36,9 @@ async function getWeekEndDateAndNumber(groupId, protocol, host) {
       weekEndDate: data.weekEndDate,
     };
   } catch (error) {
-    console.error("Error while fetching weekEndDate and weekNumber ->", error);
-    return { error: "Failed to fetch task group information." };
+    /* console.error("Error while fetching weekEndDate and weekNumber ->", error);
+    return { error: "Failed to fetch task group information." }; */
+    next(error);
   }
 }
 
@@ -56,10 +58,11 @@ async function updateWeekEndDateAndNumber(
       body: JSON.stringify({ weekNumber: newWeekNumber, weekEndDate: endDate }),
     });
   } catch (error) {
-    console.error(
+    /* console.error(
       `Error while updating weekNumber and weekEndDate for group ${groupId} ->`,
       error
-    );
+    ); */
+    next(error);
   }
 }
 
@@ -172,8 +175,9 @@ router.get("/:groupId/:currentDate", async (req, res) => {
     })
       .then((foundTasks) => res.json(foundTasks))
       .catch((error) => {
-        console.error("Error while fetching this week's tasks ->", error);
-        res.status(500).json({ error: "Failed to fetch tasks" });
+        /* console.error("Error while fetching this week's tasks ->", error);
+        res.status(500).json({ error: "Failed to fetch tasks" }); */
+        next(error);
       });
   }
 });
@@ -190,8 +194,9 @@ router.post("/:groupId/:currentDate", async (req, res) => {
 
   //Double-check there isn't an active week already
   if (checkForActiveWeek(currentDate, groupInfo.weekEndDate) === true) {
-    res.status(500).json({ error: "There is already a week in progress" }); 
-    return;
+    /* res.status(500).json({ error: "There is already a week in progress" }); 
+    return; */
+    next(error);
   }
 
   //Extract necessary values to create the week

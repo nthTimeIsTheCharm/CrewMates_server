@@ -12,7 +12,8 @@ router.get("/:id", (req, res) => {
     .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while finding the user ->", error);
-      res.status(500).json({ error: "Failed to find the " });
+      /* res.status(500).json({ error: "Failed to find the " }); */
+      next(error);
     });
 });
 
@@ -35,7 +36,8 @@ router.put("/:id", (req, res) => {
     .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while updating the user ->", error);
-      res.status(500).json({ error: "Failed to update the user" });
+      /* res.status(500).json({ error: "Failed to update the user" }); */
+      next(error);
     });
 });
 
@@ -49,7 +51,7 @@ router.delete("/:id", (req, res) => {
     )
     .catch((error) => {
       console.error("Error while deleting the user ->", error);
-      res.status(500).json({ error: "Failed to delete the user" });
+      /* res.status(500).json({ error: "Failed to delete the user" }); */
     });
 });
 
