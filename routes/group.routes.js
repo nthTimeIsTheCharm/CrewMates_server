@@ -38,6 +38,8 @@ router.get("/:id", (req, res) => {
 
 //Update group
 router.put("/:id", (req, res) => {
+  // si quiero ver quién esta haciendo la peticion debo consultar el req.payload
+  // gracias al middleware el req.payload contiene el id, mail, name, group...
   const { id } = req.params;
   const { name, members, recurringTasks, weekNumber, weekEndDate } = req.body;
   Group.findByIdAndUpdate(
