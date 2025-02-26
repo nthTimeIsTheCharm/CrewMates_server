@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Group = require("../models/Group.model");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 //The group model also has the fields weekNumber and weekEndDate
 //When the group gets created those get the default value 0 and null respectively
 //Both get updated when a week with tasks gets created through the week route
@@ -26,8 +27,15 @@ router.post("/", (req, res) => {
 //Get group information
 router.get("/:id", (req, res) => {
   const { id } = req.params;
+  console.log("req.payload: ", req.payload);
   Group.findById(id)
+    .populate({path:"members", select: "name"})
     .then((response) => {
+      console.log("response", response);
+      const groupMembers = response.members.map((member) => member._id.toString());
+      if(groupMembers.includes(req.payload._id)) {
+        console.log("ID in the group")
+      }
       res.json(response);
     }).catch((error) => {
       console.error("Error while finding the group ->", error);
