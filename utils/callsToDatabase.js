@@ -1,7 +1,7 @@
 const Task = require("../models/Task.model");
 const Group = require("../models/Group.model");
 
-async function getGroupInfo(groupId) {
+function getGroupInfo(groupId, next) {
   return Group.findById(groupId)
     .select("members recurringTasks weekNumber weekEndDate -_id")
     .then((response) => {
@@ -14,28 +14,11 @@ async function getGroupInfo(groupId) {
     })
     .catch((error) => {
       console.error(`Error while fetching group info for ${groupId}->`, error);
-      /* res.status(500).json({ error: "Failed to find the group" }); */
       next(error);
     });
 }
 
-async function getWeekEndDateAndNumber(groupId) {
-  return Group.findById(groupId)
-    .select("weekNumber weekEndDate -_id")
-    .then((response) => {
-      return {
-        weekNumber: response.weekNumber,
-        weekEndDate: response.weekEndDate,
-      };
-    })
-    .catch((error) => {
-      console.error(`Error while fetching group info for ${groupId}->`, error);
-      /* res.status(500).json({ error: "Failed to find the group" }); */
-      next(error);
-    });
-}
-
-async function saveTasksInDB(newTasks, res) {
+function saveTasksInDB(newTasks, next) {
 
   return Task.insertMany(newTasks)
     .then((createdTasks) => {
@@ -48,7 +31,7 @@ async function saveTasksInDB(newTasks, res) {
 
 }
 
-async function updateWeekEndDateAndNumber(groupId, newWeekNumber, endDate, res) {
+function updateWeekEndDateAndNumber(groupId, newWeekNumber, endDate, next) {
   return Group.findByIdAndUpdate(
     groupId,
     {
@@ -64,14 +47,12 @@ async function updateWeekEndDateAndNumber(groupId, newWeekNumber, endDate, res) 
     })
     .catch((error) => {
       console.error("Error while updating the group after creating the tasks for the week ->", error);
-      //res.status(500).json("Failed to create the tasks");
       next(error);
     });
 }
 
 module.exports = {
   getGroupInfo,
-  getWeekEndDateAndNumber,
   saveTasksInDB,
   updateWeekEndDateAndNumber,
 };

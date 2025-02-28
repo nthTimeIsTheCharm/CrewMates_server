@@ -1,3 +1,14 @@
+// Check if user is a member of the group they're trying to interact with
+function checkMembership (idInToken, groupMembersIDs){
+  const groupMembers = groupMembersIDs.map((memberID) => memberID.toString());
+  if (groupMembers.includes(idInToken)){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
 //If there's already a week that hasn't reached its end date, we don't want to create a new week
 function groupHasActiveWeek(currentDate, weekEndDate) {
   let result;
@@ -74,9 +85,30 @@ function calculateEndDate(currentDate) {
   return endDate;
 }
 
-module.exports = { 
+function createWeek (groupId, recurringTasks, members, newWeekNumber){
+  
+  //Turn the array of ObjectIds into an array of strings
+  const groupMembers = members.map((memberID) => memberID.toString());
+
+  //Tasks will be assigned based on an array of assignees
+  const assignmentOrder = createAssignmentOrder( groupMembers, recurringTasks.length);
+
+  //Create the tasks
+  const newTasks = createTasks(
+    recurringTasks,
+    assignmentOrder,
+    groupId,
+    newWeekNumber
+    );
+
+  return newTasks;
+}
+
+module.exports = {
+  checkMembership,
   groupHasActiveWeek,
   createAssignmentOrder,
   createTasks,
   calculateEndDate,
+  createWeek
 };
