@@ -25,21 +25,22 @@ router.post("/", (req, res) => {
 });
 
 //Get group information
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   const { id } = req.params;
-  console.log("req.payload: ", req.payload);
+
   Group.findById(id)
     .populate({path:"members", select: "name"})
     .then((response) => {
-      console.log("response", response);
+
       const groupMembers = response.members.map((member) => member._id.toString());
+
       if(groupMembers.includes(req.payload._id)) {
-        console.log("ID in the group")
-      }
       res.json(response);
+      } else {
+        res.status(401).json({ error: "Failed to find the group" });
+      }
+
     }).catch((error) => {
-      console.error("Error while finding the group ->", error);
-      /* res.status(500).json({ error: "Failed to find the group" }); */
       next(error);
     });
 });
