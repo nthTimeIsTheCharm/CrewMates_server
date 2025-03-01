@@ -34,7 +34,6 @@ router.get("/:groupId/:currentDate", (req, res, next) => {
 
       //If there's an active week, returns the tasks for the week. If there is no active week, returns the info to know if the week can be created"
       const weekNumber = response.weekNumber;
-      console.log(weekNumber);
       const weekEndDate = response.weekEndDate;
       const hasActiveWeek = businessLogic.groupHasActiveWeek(
         currentDate,
@@ -108,7 +107,6 @@ router.post("/:groupId/:currentDate", (req, res, next) => {
 
         //Gathering the data to send back in the response
         let response = {};
-        console.log(response);
 
         //Save the tasks in the DB
         dbCalls
