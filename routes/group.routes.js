@@ -30,7 +30,7 @@ router.post("/", (req, res, next) => {
       /* res.status(500).json({ error: "Failed to create the group" }); */
       next(error);
     });
-});
+}); 
 
 //Get group information
 router.get("/:id", (req, res, next) => {
