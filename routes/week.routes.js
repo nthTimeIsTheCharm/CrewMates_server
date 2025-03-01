@@ -48,7 +48,7 @@ router.get("/:groupId/:currentDate", (req, res, next) => {
         dbCalls
           .getThisWeeksTasks(groupId, weekNumber, next)
           .then((thisWeeksTasks) => {
-            res.json(thisWeeksTasks);
+            res.json({tasks: thisWeeksTasks});
           })
           .catch((error) => {
             next(error);
