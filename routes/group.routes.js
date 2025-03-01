@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Group = require("../models/Group.model");
+const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 //The group model also has the fields weekNumber and weekEndDate
 //When the group gets created those get the default value 0 and null respectively
@@ -12,11 +13,18 @@ const { isAuthenticated } = require("../middleware/jwt.middleware");
 // They'll be the first member of the group
 router.post("/", (req, res, next) => {
   const { name, firstMemberId } = req.body;
-  Group.create({
+  let newGroup = null;
+  return Group.create({
     name: name,
     members: [firstMemberId],
   })
-    .then((response) => res.json(response))
+    .then((createdGroup) => {
+      newGroup = createdGroup;
+      return User.findByIdAndUpdate(firstMemberId, { group: createdGroup._id.toString() });
+    })
+    .then(() => {
+      res.json(newGroup);
+    })
     .catch((error) => {
       console.error("Error while creating the group ->", error);
       /* res.status(500).json({ error: "Failed to create the group" }); */
@@ -29,18 +37,19 @@ router.get("/:id", (req, res, next) => {
   const { id } = req.params;
 
   Group.findById(id)
-    .populate({path:"members", select: "name"})
+    .populate({ path: "members", select: "name" })
     .then((response) => {
+      const groupMembers = response.members.map((member) =>
+        member._id.toString()
+      );
 
-      const groupMembers = response.members.map((member) => member._id.toString());
-
-      if(groupMembers.includes(req.payload._id)) {
-      res.json(response);
+      if (groupMembers.includes(req.payload._id)) {
+        res.json(response);
       } else {
         res.status(401).json({ error: "Failed to find the group" });
       }
-
-    }).catch((error) => {
+    })
+    .catch((error) => {
       next(error);
     });
 });
@@ -56,7 +65,7 @@ router.put("/:id", (req, res, next) => {
       members,
       recurringTasks,
       weekNumber,
-      weekEndDate
+      weekEndDate,
     },
     { new: true }
   )
