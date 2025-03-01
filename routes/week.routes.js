@@ -30,18 +30,17 @@ const dbCalls = require("../utils/callsToDatabase");
 
       //If there's an active week, returns the tasks for the week. If not, null.
       const weekNumber = response.weekNumber;
+      console.log(weekNumber);
       const weekEndDate = response.weekEndDate;
       if (businessLogic.groupHasActiveWeek(currentDate, weekEndDate) === false ) {
         res.json("null");
       } else {
-        Task.find({
-          $and: [{ group: groupId }, { weekNumber: weekNumber }],
+        dbCalls.getThisWeeksTasks(groupId, weekNumber, next)
+        .then((thisWeeksTasks) => {
+          res.json(thisWeeksTasks);
+        }).catch((error)=>{
+          next(error);
         })
-          .then((foundTasks) => res.json(foundTasks))
-          .catch((error) => {
-           console.error(`Failed to fetch tasks for group ${groupId} week ${weekNumber} ->`, error );
-           next(error);
-          });
       }
     })
     .catch((error) => { next(error) });

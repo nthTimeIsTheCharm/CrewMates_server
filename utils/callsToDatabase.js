@@ -18,6 +18,21 @@ function getGroupInfo(groupId, next) {
     });
 }
 
+function getThisWeeksTasks(groupId, weekNumber, next) {
+  return Task.find({
+    $and: [{ group: groupId }, { weekNumber: weekNumber }],
+  })
+    .then((foundTasks) => {
+      return foundTasks;
+    }).catch((error) => {
+      console.error(
+        `Failed to fetch tasks for group ${groupId} week ${weekNumber} ->`,
+        error
+      );
+      next(error);
+    });
+}
+
 function saveTasksInDB(newTasks, next) {
 
   return Task.insertMany(newTasks)
@@ -53,6 +68,7 @@ function updateWeekEndDateAndNumber(groupId, newWeekNumber, endDate, next) {
 
 module.exports = {
   getGroupInfo,
+  getThisWeeksTasks,
   saveTasksInDB,
   updateWeekEndDateAndNumber,
 };
