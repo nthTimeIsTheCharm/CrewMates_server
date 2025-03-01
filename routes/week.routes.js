@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const Task = require("../models/Task.model");
-
 //Business logic functions
 const businessLogic = require("../utils/businessLogic");
 const dbCalls = require("../utils/callsToDatabase");
