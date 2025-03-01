@@ -9,7 +9,7 @@ const Group = require("../models/Group.model");
 //Create a new group
 //Within members, we expect to receive the userID of the user who creates the group
 // They'll be the first member of the group
-router.post("/", (req, res) => {
+router.post("/", (req, res, next) => {
   const { name, firstMemberId } = req.body;
   Group.create({
     name: name,
@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
 });
 
 //Get group information
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   Group.findById(id)
     .then((response) => {
@@ -37,7 +37,7 @@ router.get("/:id", (req, res) => {
 });
 
 //Update group
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   const { id } = req.params;
   const { name, members, recurringTasks, weekNumber, weekEndDate } = req.body;
   Group.findByIdAndUpdate(
@@ -61,7 +61,7 @@ router.put("/:id", (req, res) => {
 });
 
 //Delete group
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
   Group.findByIdAndDelete(id)
     .then(() =>
