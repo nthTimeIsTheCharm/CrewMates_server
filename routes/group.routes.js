@@ -120,13 +120,30 @@ router.put("/join/:id", (req, res, next) => {
 //Delete group **
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
-  Group.findByIdAndDelete(id)
-    .then(() =>
-      res.json({ message: `Project with ${id} is removed successfully.` })
-    )
-    .catch((error) => {
-      console.error("Error while deleting the group ->", error);
-      next(error);
+
+  Group.findById(id)
+    .select("members -_id")
+    .then((response) => {
+      console.log("select", response);
+      const isAMember = businessLogic.checkMembership(
+        req.payload._id,
+        response.members
+      );
+
+      if (isAMember) {
+        Group.findByIdAndDelete(id)
+          .then(() =>
+            res.json({ message: `Project with ${id} is removed successfully.` })
+          )
+          .catch((error) => {
+            console.error("Error while deleting the group ->", error);
+            next(error);
+          });
+      } else {
+        res.status(401).json({
+          message: "Sorry, you're not authorized to perform this action.",
+        });
+      }
     });
 });
 
