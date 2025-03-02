@@ -73,10 +73,30 @@ router.put("/:id", (req, res, next) => {
     .then((response) => res.json(response))
     .catch((error) => {
       console.error("Error while updating the group ->", error);
-      /* res.status(500).json({ error: "Failed to update the group" }); */
       next(error);
     });
 });
+
+//Join group
+router.put("/join/:id", (req, res, next) => {
+  //User can put a wrong ID
+  
+  const { id } = req.params;
+  const {newMember} = req.body;
+
+  Group.findByIdAndUpdate(id, {$push: {members: newMember}}, {new:true}
+  )
+  .then(() => {
+    return User.findByIdAndUpdate(newMember, { group: id });
+  })
+  .then((updatedUser) => res.status(200).json(updatedUser))
+  .catch((error) => {
+    console.error("Error while adding user to the group ->", error);
+    next(error);
+  });
+});
+
+
 
 //Delete group
 router.delete("/:id", (req, res, next) => {
