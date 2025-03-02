@@ -1,7 +1,7 @@
 // Check if user is a member of the group they're trying to interact with
-function checkMembership (idInToken, groupMembersIDs){
-  const groupMembers = groupMembersIDs.map((memberID) => memberID.toString());
-  if (groupMembers.includes(idInToken)){
+function checkMembership (idInToken, groupMembers){
+  const members = groupMembers.map((member) => member._id.toString());
+  if (members.includes(idInToken)){
     return true;
   } else {
     return false;
@@ -15,10 +15,8 @@ function groupHasActiveWeek(currentDate, weekEndDate) {
 
   //Create date without the time
   const weekEndDateYYYYMMDD = new Date(weekEndDate.toISOString().slice(0, 10));
-
   //Turn date into milliseconds for the comparison
   const weekEndDateMs = weekEndDateYYYYMMDD.getTime();
-
   //weekDate being null means the group has never created a week
   //currentDate > weekEndDate means that the last week they had has already ended
   if (
@@ -48,7 +46,7 @@ function createAssignmentOrder(members, taskCount) {
     result.push(assignees[randomIndex]);
     assignees.splice(randomIndex, 1);
   }
-  return result;
+  return result; 
 }
 
 //As they're created, the tasks get assigned based on the assignment order
@@ -56,7 +54,8 @@ function createTasks(recurringTasks, assignmentOrder, groupId, newWeekNumber) {
   const tasks = recurringTasks.map((taskName, index) => {
     return {
       name: taskName,
-      assignee: assignmentOrder[index],
+      assigneeId: assignmentOrder[index]._id.toString(),
+      assigneeName: assignmentOrder[index].name,
       group: groupId,
       weekNumber: newWeekNumber,
     };
@@ -86,9 +85,13 @@ function calculateEndDate(currentDate) {
 }
 
 function createWeek (groupId, recurringTasks, members, newWeekNumber){
-  
   //Turn the array of ObjectIds into an array of strings
-  const groupMembers = members.map((memberID) => memberID.toString());
+  const groupMembers = members.map((member) => {
+    return {
+      _id: member._id.toString(),
+      name: member.name
+    }
+  });
 
   //Tasks will be assigned based on an array of assignees
   const assignmentOrder = createAssignmentOrder( groupMembers, recurringTasks.length);
