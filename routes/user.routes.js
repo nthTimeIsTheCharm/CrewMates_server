@@ -6,7 +6,7 @@ const User = require("../models/User.model");
 
 //Get user information
 
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   User.findById(id)
     .then((response) => res.json(response))
@@ -19,7 +19,7 @@ router.get("/:id", (req, res) => {
 
 //Update user
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res,next) => {
   const { id } = req.params;
   const { name, email, group } = req.body;
   console.log(req.params);
@@ -43,7 +43,7 @@ router.put("/:id", (req, res) => {
 
 //Delete user
 //TODO: When a user gets deleted, we need to do something with the tasks in their name
-router.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
   User.findByIdAndDelete(id)
     .then(() =>
@@ -52,6 +52,7 @@ router.delete("/:id", (req, res) => {
     .catch((error) => {
       console.error("Error while deleting the user ->", error);
       /* res.status(500).json({ error: "Failed to delete the user" }); */
+      next(error);
     });
 });
 

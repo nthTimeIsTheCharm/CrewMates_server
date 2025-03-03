@@ -4,12 +4,13 @@ const Group = require("../models/Group.model");
 function getGroupInfo(groupId, next) {
   return Group.findById(groupId)
     .select("members recurringTasks weekNumber weekEndDate -_id")
-    .then((response) => {
-      return {
-        members: response.members,
-        recurringTasks: response.recurringTasks,
-        weekNumber: response.weekNumber,
-        weekEndDate: response.weekEndDate,
+    .populate("members", ["name"])
+    .then((groupInfo) => {
+       return {
+        members: groupInfo.members,
+        recurringTasks: groupInfo.recurringTasks,
+        weekNumber: groupInfo.weekNumber,
+        weekEndDate: groupInfo.weekEndDate,
       };
     })
     .catch((error) => {

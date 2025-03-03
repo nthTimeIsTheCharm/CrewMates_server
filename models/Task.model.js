@@ -4,16 +4,20 @@ const { Schema, model } = mongoose;
 const taskSchema = new Schema(
   {
     name: { type: String, required: true },
-    assignee: {
+    assigneeId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
+    },
+    assigneeName: {
+      type: String,
+      required: true,
     },
     isDone: { type: Boolean, default: false },
     group: {
       type: Schema.Types.ObjectId,
       ref: "Group",
-      required: true
+      required: true,
     },
     weekNumber: { type: Number, required: true },
   },
