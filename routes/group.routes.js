@@ -41,7 +41,7 @@ router.get("/:id", (req, res, next) => {
   const { id } = req.params;
 
   Group.findById(id)
-    .populate("members", ["name", "_id"])
+    .populate("members", "name")
     .then((response) => {
       const isAMember = businessLogic.checkMembership(
         req.payload._id,
@@ -88,7 +88,9 @@ router.put("/:id", (req, res, next) => {
             weekEndDate,
           },
           { new: true }
-        ).then((response) => res.json(response))
+        )
+        .populate("members", "name")
+        .then((response) => res.json(response))
           .catch((error) => {
             console.error("Error while updating the group ->", error);
             next(error);
