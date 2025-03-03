@@ -14,9 +14,11 @@ const businessLogic = require("../utils/businessLogic");
 //Within members, we expect to receive the userID of the user who creates the group
 // They'll be the first member of the group
 router.post("/", (req, res, next) => {
+
   const { firstMemberId, firstMemberName } = req.body;
   const name = `${firstMemberName}'s crew`;
   let newGroup = null;
+ 
   return Group.create({
     name: name,
     members: [firstMemberId],
@@ -71,7 +73,6 @@ router.put("/:id", (req, res, next) => {
   Group.findById(id)
     .select("members -_id")
     .then((response) => {
-      console.log("select", response)
       const isAMember = businessLogic.checkMembership(
         req.payload._id,
         response.members
@@ -126,7 +127,6 @@ router.delete("/:id", (req, res, next) => {
   Group.findById(id)
     .select("members -_id")
     .then((response) => {
-      console.log("select", response);
       const isAMember = businessLogic.checkMembership(
         req.payload._id,
         response.members
