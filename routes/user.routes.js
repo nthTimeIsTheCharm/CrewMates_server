@@ -9,7 +9,7 @@ const User = require("../models/User.model");
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   User.findById(id)
-    .then((response) => res.json(response))
+    .then((response) => res.json({"name" : response.name, "email" : response.email, "group" : response.group}))
     .catch((error) => {
       console.error("Error while finding the user ->", error);
       /* res.status(500).json({ error: "Failed to find the " }); */
@@ -19,10 +19,16 @@ router.get("/:id", (req, res, next) => {
 
 //Update user
 
-router.put("/:id", (req, res,next) => {
+router.put("/:id", (req, res, next) => {
   const { id } = req.params;
   const { name, email, group } = req.body;
   console.log(req.params);
+  if 
+  (id !== req.payload._id) {
+    return res.status(401).json({
+      message: "Sorry, you're not authorized to perform this action"
+    });
+  }
   User.findByIdAndUpdate(
     id,
     {
@@ -33,7 +39,7 @@ router.put("/:id", (req, res,next) => {
     { new: true }
   )
 
-    .then((response) => res.json(response))
+    .then((response) => res.json({"name" : response.name, "email" : response.email, "group" : response.group}))
     .catch((error) => {
       console.error("Error while updating the user ->", error);
       /* res.status(500).json({ error: "Failed to update the user" }); */
@@ -45,6 +51,11 @@ router.put("/:id", (req, res,next) => {
 //TODO: When a user gets deleted, we need to do something with the tasks in their name
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
+  if(id !== req.payload._id) {
+    return res.status(401).json({
+      message: "Sorry, you're not authorized to perform this action"
+    });
+  }
   User.findByIdAndDelete(id)
     .then(() =>
       res.json({ message: `User with ${id} is removed successfully.` })
