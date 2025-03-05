@@ -28,7 +28,12 @@ module.exports = (app) => {
     })
   ); */
 
-  app.use(cors());
+  app.use(
+    cors({
+      // Add the URLs of allowed origins to this array
+      origin: ['http://localhost:5173', 'https://crewmates-app.netlify.app'],
+    })
+  );
 
   // In development environment the app logs
   app.use(logger("dev"));
