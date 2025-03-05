@@ -28,8 +28,12 @@ module.exports = (app) => {
     })
   ); */
 
-  app.use(cors());
-    
+  app.use(
+    cors({
+      origin: "*"
+    })
+  );
+
   // In development environment the app logs
   app.use(logger("dev"));
 
