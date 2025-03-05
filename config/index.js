@@ -30,8 +30,7 @@ module.exports = (app) => {
 
   app.use(
     cors({
-      // Add the URLs of allowed origins to this array
-      origin: ['http://localhost:5173', 'https://crewmates-app.netlify.app'],
+      origin: "*"
     })
   );
 
