@@ -4,6 +4,7 @@ const router = express.Router();
 const Group = require("../models/Group.model");
 const User = require("../models/User.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
+const helperFunctions = require("../utils/helperFunctions")
 const businessLogic = require("../utils/businessLogic");
 
 //The group model also has the fields weekNumber and weekEndDate
@@ -108,16 +109,28 @@ router.put("/:id", (req, res, next) => {
 router.put("/join/:id", (req, res, next) => {
   const { id } = req.params;
   const { newMember } = req.body;
+  const isValidObjectId = helperFunctions.isValidObjectId(id);
+  
+  console.log(isValidObjectId);
+  
+  if (isValidObjectId) {
+    Group.findByIdAndUpdate(
+      id,
+      { $push: { members: newMember } },
+      { new: true }
+    )
+      .then(() => {
+        return User.findByIdAndUpdate(newMember, { group: id });
+      })
+      .then((updatedUser) => res.status(200).json(updatedUser))
+      .catch((error) => {
+        console.error("Error while adding user to the group ->", error);
+        next(error);
+      });
+  } else {
+    res.status(400).json({Error:"Not a valid code"});
+  }
 
-  Group.findByIdAndUpdate(id, { $push: { members: newMember } }, { new: true })
-    .then(() => {
-      return User.findByIdAndUpdate(newMember, { group: id });
-    })
-    .then((updatedUser) => res.status(200).json(updatedUser))
-    .catch((error) => {
-      console.error("Error while adding user to the group ->", error);
-      next(error);
-    });
 });
 
 //Delete group **
