@@ -9,7 +9,7 @@ const User = require("../models/User.model");
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   User.findById(id)
-    .then((response) => res.json({"name" : response.name, "email" : response.email, "group" : response.group}))
+    .then((response) => res.json({"_id": response._id, "name" : response.name, "email" : response.email, "group" : response.group}))
     .catch((error) => {
       console.error("Error while finding the user ->", error);
       /* res.status(500).json({ error: "Failed to find the " }); */
