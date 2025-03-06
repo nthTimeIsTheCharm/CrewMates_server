@@ -23,39 +23,70 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
-//Update user
+//Remove group from user after removing them from the group
 
-router.put("/:id", (req, res, next) => {
+router.put("/remove-group/:id", (req, res, next) => {
   const { id } = req.params;
-  console.log(req.body);
-  const { name, email, group } = req.body;
-  if (id !== req.payload._id || req.body.removedFromGroup === true) {
+  const { group } = req.body;
+  
+  if (req.body.removedFromGroup) {
+    User.findByIdAndUpdate(
+      id,
+      { $unset: { group: 1 } },
+      { new: true }
+    ).then((response) =>
+        res.json({
+          name: response.name,
+          email: response.email,
+        })
+      )
+      .catch((error) => {
+        console.error("Error while updating the user ->", error);
+        /* res.status(500).json({ error: "Failed to update the user" }); */
+        next(error);
+      });
+  } else {
     return res.status(401).json({
       message: "Sorry, you're not authorized to perform this action",
     });
   }
-  User.findByIdAndUpdate(
-    id,
-    {
-      name,
-      email,
-      group,
-    },
-    { new: true }
-  )
+});
 
-    .then((response) =>
-      res.json({
-        name: response.name,
-        email: response.email,
-        group: response.group,
-      })
+//Update user
+
+router.put("/:id", (req, res, next) => {
+  const { id } = req.params;
+  const { name, email, group } = req.body;
+  
+  if (id === req.payload._id) {
+    User.findByIdAndUpdate(
+      id,
+      {
+        name,
+        email,
+        group,
+      },
+      { new: true }
     )
-    .catch((error) => {
-      console.error("Error while updating the user ->", error);
-      /* res.status(500).json({ error: "Failed to update the user" }); */
-      next(error);
+
+      .then((response) =>
+        res.json({
+          name: response.name,
+          email: response.email,
+          group: response.group,
+        })
+      )
+      .catch((error) => {
+        console.error("Error while updating the user ->", error);
+        /* res.status(500).json({ error: "Failed to update the user" }); */
+        next(error);
+      });
+  } else {
+    console.log("hooollaaaa");
+    return res.status(401).json({
+      message: "Sorry, you're not authorized to perform this action",
     });
+  }
 });
 
 //Delete user
