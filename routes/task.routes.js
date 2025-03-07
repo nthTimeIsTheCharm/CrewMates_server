@@ -21,7 +21,7 @@ router.post("/one-off-task", (req, res) => {
 //Mark task as done/not done
 router.put("/:taskId", (req, res) => {
   const { taskId } = req.params;
-
+  const {isDone} = req.body;
   Task.findByIdAndUpdate(taskId, { isDone: req.body.isDone }, { new: true })
     .then((updatedTask) => res.json(updatedTask))
     .catch((error) => {
