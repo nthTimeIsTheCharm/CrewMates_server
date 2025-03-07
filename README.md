@@ -15,6 +15,7 @@
 | POST      | /api/groups     | JSON         | Create a new group         |
 | GET       | /api/groups/:id | (empty)      | Get group information      |
 | PUT       | /api/groups/:id | JSON         | Update group               |
+| PUT       | api/groups/join/:id | JSON | Adds a user to a group and the group to the user 
 | DELETE    | /api/groups/:id | (empty)      | Delete group               |
 
 ## Task routes
@@ -23,7 +24,7 @@
 | --------- | ----------------------------- | -------------------------- | ------------------------- |
 | POST      | /api/tasks/one-off-task        | JSON                       | Create a new task in an existing week|
 | PUT       | /api/tasks/:id                | JSON                       | Update a task (done/not done)|
-| DELETE    | /api/tasks/:id                | (empty)                    | Delete task ???              | 
+| DELETE    | /api/tasks/:id                | (empty)                    | Delete task            | 
 
 ## User routes
 
@@ -31,6 +32,7 @@
 | --------- | -------------- | ------------ | ------------------------- |
 | GET       | /api/users/:id | (empty)      | Get user information      |
 | PUT       | /api/users/:id | JSON         | Update user               |
+| PUT       | /api/users/remove-group/:id | JSON |Removes group from user
 | DELETE    | /api/users/:id | (empty)      | Delete user               |
 
 ## Week routes
@@ -67,7 +69,6 @@
       ref: "Group" },
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 ```
@@ -77,14 +78,20 @@
 ```
 {
     name: { type: String, required: true },
-    assignee: {
+    assigneeId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    assigneeName: {
+      type: String,
+      required: true,
     },
     isDone: { type: Boolean, default: false },
     group: {
       type: Schema.Types.ObjectId,
       ref: "Group",
+      required: true,
     },
     weekNumber: { type: Number, required: true },
   },
