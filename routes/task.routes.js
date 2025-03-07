@@ -21,9 +21,14 @@ router.post("/one-off-task", (req, res) => {
 //Mark task as done/not done
 router.put("/:taskId", (req, res) => {
   const { taskId } = req.params;
-  const {isDone} = req.body;
-  Task.findByIdAndUpdate(taskId, { isDone: req.body.isDone }, { new: true })
-    .then((updatedTask) => res.json(updatedTask))
+  const {isDone} = req.body; // equal to req.body.isDone
+  Task.findByIdAndUpdate(taskId, { isDone}, { new: true })
+    .then((updatedTask) => {
+      if(!updatedTask){
+        return res.status(404).json({message: "Task not found"});
+      }
+      res.json(updatedTask)
+       })
     .catch((error) => {
       console.error("Error while finding the user ->", error);
       /* res.status(500).json(error); */
