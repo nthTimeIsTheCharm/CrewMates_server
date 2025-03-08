@@ -27,7 +27,6 @@ router.get("/:id", (req, res, next) => {
 
 router.put("/remove-group/:id", (req, res, next) => {
   const { id } = req.params;
-  const { group } = req.body;
   
   if (req.body.removedFromGroup) {
     User.findByIdAndUpdate(
@@ -36,6 +35,7 @@ router.put("/remove-group/:id", (req, res, next) => {
       { new: true }
     ).then((response) =>
         res.json({
+          _id: response._id,
           name: response.name,
           email: response.email,
         })
