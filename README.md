@@ -1,3 +1,8 @@
+# Overview
+Crew Mates is an application that assigns chores to you and your household members on a weekly basis. 
+
+This repository contains the backend of the application. For details on using the app, visit the [front-end repository](https://github.com/Violinistapirata/final_project_client).
+
 # Server Routes / Endpoints
 
 ## Authentication routes
